@@ -32,6 +32,26 @@ export class SalesOrder{
     })
     name:string
 
+    @Edm.Boolean
+    @Edm.Annotate({
+        term: "UI.DisplayName",
+        string: "Editing"
+    }, {
+        term: "UI.ControlHint",
+        string: "Boolean"
+    })
+    edit:boolean
+
+    @Edm.Boolean
+    @Edm.Annotate({
+        term: "UI.DisplayName",
+        string: "Deleted"
+    }, {
+        term: "UI.ControlHint",
+        string: "Boolean"
+    })
+    deleted:boolean
+
     @Edm.Double
     @Edm.Annotate({
         term: "UI.DisplayName",
