@@ -22,7 +22,7 @@ export class SalesOrderController extends ODataController {
       .skip(mongodbQuery.skip || 0)
       .limit(mongodbQuery.limit || 0)
       .sort(mongodbQuery.sort)
-      .toArray();
+      .toArray();//TODO заменить на поток
     if (mongodbQuery.inlinecount) {
       (<any>result).inlinecount = await db.collection(collectionName)
         .find(mongodbQuery.query)
