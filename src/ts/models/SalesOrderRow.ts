@@ -1,5 +1,6 @@
 import { ObjectID } from "mongodb";
 import { Edm, odata } from "odata-v4-server";
+import { SalesOrder } from "./SalesOrder";
 
 @Edm.Annotate({
   term: "UI.DisplayName",
@@ -22,6 +23,10 @@ export class SalesOrderRow{
   })
   _id:ObjectID
 
+  @Edm.TypeDefinition(ObjectID)
+  @Edm.Required
+  parentId:ObjectID
+
   @Edm.String
   @Edm.Annotate({
     term: "UI.DisplayName",
@@ -36,7 +41,7 @@ export class SalesOrderRow{
   @Edm.Annotate({
     term: "UI.DisplayName",
     string: "Editing"
-}, {
+  }, {
     term: "UI.ControlHint",
     string: "Boolean"
   })
