@@ -13,6 +13,7 @@ const collectionName = "SalesOrder";
 export class SalesOrderController extends ODataController {
   @odata.GET
   async find( @odata.query query: ODataQuery): Promise<SalesOrder[]> {
+    
     const db = await connect();
     const mongodbQuery = createQuery(query);
     if (typeof mongodbQuery.query._id == "string") mongodbQuery.query._id = new ObjectID(mongodbQuery.query._id);
@@ -34,6 +35,7 @@ export class SalesOrderController extends ODataController {
 
   @odata.GET
   async findOne( @odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrder> {
+    
     const db = await connect();
     const mongodbQuery = createQuery(query);
     let keyId;
@@ -69,7 +71,7 @@ export class SalesOrderController extends ODataController {
 
   @odata.PATCH
   async update( @odata.key key: string, @odata.body delta: any): Promise<number> {
-    console.log('PATCH');
+    
     const db = await connect();
     if (delta._id) delete delta._id;
     let keyId;
@@ -79,6 +81,7 @@ export class SalesOrderController extends ODataController {
 
   @odata.DELETE
   async remove( @odata.key key: string): Promise<number> {
+    console.log('DELETE');
     const db = await connect();
     let keyId;
     try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
@@ -93,5 +96,14 @@ export class SalesOrderController extends ODataController {
     return await db.collection("SalesOrderRow")
       .find(mongodbQuery.query, mongodbQuery.projection, mongodbQuery.skip, mongodbQuery.limit)
       .stream().pipe(stream);
+  }
+
+  @odata.DELETE("Rows")
+  async removeRows( @odata.key key: string): Promise<number> {
+    console.log('DELETE Rows');
+    const db = await connect();
+    let keyId;
+    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
+    return await db.collection("SalesOrderRow").deleteOne({ _id: keyId }).then(result => result.deletedCount);
   }
 }

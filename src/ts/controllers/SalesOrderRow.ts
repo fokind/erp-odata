@@ -43,8 +43,9 @@ export class SalesOrderRowController extends ODataController {
 
     @odata.POST
     async insert( @odata.body data: any): Promise<SalesOrderRow> {
-        console.log(data);
+        //console.log(data);
         const db = await connect();
+        if ( typeof data.parentId == "string") data.parentId = new ObjectID(data.parentId);
         return await db.collection(collectionName).insertOne(data).then((result) => {
             data._id = result.insertedId;
             return data;
@@ -67,7 +68,7 @@ export class SalesOrderRowController extends ODataController {
 
     @odata.PATCH
     async update( @odata.key key: string, @odata.body delta: any): Promise<number> {
-        console.log('PATCH');
+        //console.log('PATCH');
         const db = await connect();
         if (delta._id) delete delta._id;
         let keyId;

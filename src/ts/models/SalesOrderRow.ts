@@ -14,56 +14,26 @@ export class SalesOrderRow{
   @Edm.Key
   @Edm.Computed
   @Edm.String
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "ID"
-  }, {
-    term: "UI.ControlHint",
-    string: "ReadOnly"
-  })
   _id:ObjectID
 
-  @Edm.TypeDefinition(ObjectID)
-  @Edm.Required
+  //@Edm.TypeDefinition(ObjectID)
+  //@Edm.Required
+  @Edm.Computed
+  @Edm.String
   parentId:ObjectID
 
   @Edm.String
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Description"
-  }, {
-    term: "UI.ControlHint",
-    string: "ShortText"
-  })
   name:string
 
   @Edm.Boolean
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Editing"
-  }, {
-    term: "UI.ControlHint",
-    string: "Boolean"
-  })
-  edit:boolean
-
-  @Edm.Boolean
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Deleted"
-  }, {
-    term: "UI.ControlHint",
-    string: "Boolean"
-  })
   deleted:boolean
 
   @Edm.Double
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Total"
-  }, {
-    term: "UI.ControlHint",
-    string: "Number"
-  })
+  quantity:number
+
+  @Edm.Double
+  price:number
+  
+  @Edm.Double
   total:number
 }
