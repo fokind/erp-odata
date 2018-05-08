@@ -47,7 +47,7 @@ export class SalesOrderController extends ODataController {
 
   @odata.POST
   async insert( @odata.body data: any): Promise<SalesOrder> {
-    console.log(data);
+    //console.log(data);
     const db = await connect();
     return await db.collection(collectionName).insertOne(data).then((result) => {
       data._id = result.insertedId;
@@ -81,7 +81,7 @@ export class SalesOrderController extends ODataController {
 
   @odata.DELETE
   async remove( @odata.key key: string): Promise<number> {
-    console.log('DELETE');
+    //console.log('DELETE');
     const db = await connect();
     let keyId;
     try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
@@ -100,7 +100,7 @@ export class SalesOrderController extends ODataController {
 
   @odata.DELETE("Rows")
   async removeRows( @odata.key key: string): Promise<number> {
-    console.log('DELETE Rows');
+    //console.log('DELETE Rows');
     const db = await connect();
     let keyId;
     try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }

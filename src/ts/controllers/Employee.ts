@@ -73,6 +73,7 @@ export class EmployeeController extends ODataController {
         if (delta._id) delete delta._id;
         let keyId;
         try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
+        //выполнять бизнес правила, например, total = quantity * cost
         return await db.collection(collectionName).updateOne({ _id: keyId }, { $set: delta }).then(result => result.modifiedCount);
     }
 
