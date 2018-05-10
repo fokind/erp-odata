@@ -71,7 +71,6 @@ export class SalesOrderController extends ODataController {
 
   @odata.PATCH
   async update( @odata.key key: string, @odata.body delta: any): Promise<number> {
-    
     const db = await connect();
     if (delta._id) delete delta._id;
     let keyId;

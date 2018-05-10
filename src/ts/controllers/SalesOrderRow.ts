@@ -74,9 +74,41 @@ export class SalesOrderRowController extends ODataController {
     //console.log('PATCH');
     const db = await connect();
     if (delta._id) delete delta._id;
+    console.log('delta: ' + JSON.stringify(delta));
     let keyId;
     try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return await db.collection(collectionName).updateOne({ _id: keyId }, { $set: delta }).then(result => result.modifiedCount);
+    //await db.collection('SalerOrder')
+
+    /*db.collection('SalerOrder').aggregate([
+      {
+        $match: {
+          _id: 
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total : {
+            $sum: "$total"
+          }
+        }
+      }
+    ], function(err, result) {
+      if (err) return console.dir(err)
+      console.log(result);
+    });*/
+
+    //пример вычисления зависимого поля
+    await db.collection(collectionName).findOne({ _id: keyId }).then(result => {
+      if (!delta.quantity) delta.quantity = result.quantity;
+      if (!delta.price) delta.price = result.price;
+      delta.total = delta.quantity * delta.price;
+    });
+
+    return await db.collection(collectionName).updateOne({ _id: keyId }, { $set: delta })
+      .then(result => {
+        return result.modifiedCount;
+      });//BUG modifiedCount не существует, вместо этого nModified
   }
 
   @odata.DELETE
