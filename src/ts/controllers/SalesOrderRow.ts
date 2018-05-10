@@ -15,7 +15,7 @@ export class SalesOrderRowController extends ODataController {
     const db = await connect();
     const mongodbQuery = createQuery(query);
     if (typeof mongodbQuery.query._id == "string") mongodbQuery.query._id = new ObjectID(mongodbQuery.query._id);
-    if (typeof mongodbQuery.query.parentId == "string") mongodbQuery.query.parentId = new ObjectID(mongodbQuery.query.parentId);
+    if (typeof mongodbQuery.query.salesOrderId == "string") mongodbQuery.query.salesOrderId = new ObjectID(mongodbQuery.query.salesOrderId);
     
     let result = typeof mongodbQuery.limit == "number" && mongodbQuery.limit === 0 ? [] : await db.collection(collectionName)
       .find(mongodbQuery.query)
