@@ -1,7 +1,7 @@
-import { Collection, ObjectID } from "mongodb";
-import { createQuery } from "odata-v4-mongodb";
-import { ODataController, Edm, odata, ODataQuery } from "odata-v4-server";
-import { SalesOrderRow } from "../models/SalesOrderRow";
+import {Collection, ObjectID} from "mongodb";
+import {createQuery} from "odata-v4-mongodb";
+import {ODataController, Edm, odata, ODataQuery} from "odata-v4-server";
+import {SalesOrderRow} from "../models/SalesOrderRow";
 import connect from "../connect";
 
 const collectionName = "SalesOrderRow";
@@ -10,7 +10,7 @@ const collectionName = "SalesOrderRow";
 @Edm.EntitySet("SalesOrderRows")
 export class SalesOrderRowController extends ODataController {
   @odata.GET
-  async find( @odata.query query: ODataQuery): Promise<SalesOrderRow[]> {
+  async find(@odata.query query: ODataQuery): Promise<SalesOrderRow[]> {
     //console.log(query);
     const db = await connect();
     const mongodbQuery = createQuery(query);
@@ -34,34 +34,36 @@ export class SalesOrderRowController extends ODataController {
   }
 
   @odata.GET
-  async findOne( @odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrderRow> {
+  async findOne(@odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrderRow> {
     const db = await connect();
     const mongodbQuery = createQuery(query);
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return db.collection(collectionName).findOne({ _id: keyId }, {
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return db.collection(collectionName).findOne({_id: keyId}, {
       fields: mongodbQuery.projection
     });
   }
 
   @odata.POST
-  async insert( @odata.body data: any): Promise<SalesOrderRow> {
+  async insert(@odata.body data: any): Promise<SalesOrderRow> {
     //console.log(data);
     const db = await connect();
-    if ( typeof data.parentId == "string") data.parentId = new ObjectID(data.parentId);
+    if (typeof data.salesOrderId == "string") data.salesOrderId = new ObjectID(data.salesOrderId);
     return await db.collection(collectionName).insertOne(data).then((result) => {
       data._id = result.insertedId;
+      //получить и сразу записать очередной номер по счетчику
+      //присвоить
       return data;
     });
   }
 
   @odata.PUT
-  async upsert( @odata.key key: string, @odata.body data: any, @odata.context context: any): Promise<SalesOrderRow> {
+  async upsert(@odata.key key: string, @odata.body data: any, @odata.context context: any): Promise<SalesOrderRow> {
     const db = await connect();
     if (data._id) delete data._id;
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return await db.collection(collectionName).updateOne({ _id: keyId }, data, {
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return await db.collection(collectionName).updateOne({_id: keyId}, data, {
       upsert: true
     }).then((result) => {
       data._id = result.upsertedId
@@ -70,13 +72,11 @@ export class SalesOrderRowController extends ODataController {
   }
 
   @odata.PATCH
-  async update( @odata.key key: string, @odata.body delta: any): Promise<number> {
-    //console.log('PATCH');
+  async update(@odata.key key: string, @odata.body delta: any): Promise<number> {
     const db = await connect();
     if (delta._id) delete delta._id;
-    console.log('delta: ' + JSON.stringify(delta));
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
     //await db.collection('SalerOrder')
 
     /*db.collection('SalerOrder').aggregate([
@@ -99,13 +99,13 @@ export class SalesOrderRowController extends ODataController {
     });*/
 
     //пример вычисления зависимого поля
-    await db.collection(collectionName).findOne({ _id: keyId }).then(result => {
+    await db.collection(collectionName).findOne({_id: keyId}).then(result => {
       if (!delta.quantity) delta.quantity = result.quantity;
       if (!delta.price) delta.price = result.price;
       delta.total = delta.quantity * delta.price;
     });
 
-    return await db.collection(collectionName).updateOne({ _id: keyId }, { $set: delta })
+    return await db.collection(collectionName).updateOne({_id: keyId}, {$set: delta})
       .then(result => {
         return result.modifiedCount;
       });//BUG modifiedCount не существует, вместо этого nModified
@@ -115,7 +115,7 @@ export class SalesOrderRowController extends ODataController {
   async remove( @odata.key key: string): Promise<number> {
     const db = await connect();
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return await db.collection(collectionName).deleteOne({ _id: keyId }).then(result => result.deletedCount);
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return await db.collection(collectionName).deleteOne({_id: keyId}).then(result => result.deletedCount);
   }
 }

@@ -34,21 +34,27 @@ export class SalesOrderController extends ODataController {
   }
 
   @odata.GET
-  async findOne( @odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrder> {
+  async findOne(@odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrder> {
     
     const db = await connect();
     const mongodbQuery = createQuery(query);
     let keyId;
-    try { keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return db.collection(collectionName).findOne({ _id: keyId }, {
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return db.collection(collectionName).findOne({_id: keyId}, {
       fields: mongodbQuery.projection
     });
   }
 
   @odata.POST
-  async insert( @odata.body data: any): Promise<SalesOrder> {
-    //console.log(data);
+  async insert(@odata.body data: any): Promise<SalesOrder> {
     const db = await connect();
+    data.number = await db.collection('Counter').findOneAndUpdate(
+      {"key" : "SalesOrder"},
+      {$inc: {"value" : 1}}
+    ).then((result) => {
+      return result.value.value;
+    });
+
     return await db.collection(collectionName).insertOne(data).then((result) => {
       data._id = result.insertedId;
       return data;
@@ -56,12 +62,12 @@ export class SalesOrderController extends ODataController {
   }
 
   @odata.PUT
-  async upsert( @odata.key key: string, @odata.body data: any, @odata.context context: any): Promise<SalesOrder> {
+  async upsert(@odata.key key: string, @odata.body data: any, @odata.context context: any): Promise<SalesOrder> {
     const db = await connect();
     if (data._id) delete data._id;
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return await db.collection(collectionName).updateOne({ _id: keyId }, data, {
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return await db.collection(collectionName).updateOne({_id: keyId}, data, {
       upsert: true
     }).then((result) => {
       data._id = result.upsertedId
@@ -70,24 +76,24 @@ export class SalesOrderController extends ODataController {
   }
 
   @odata.PATCH
-  async update( @odata.key key: string, @odata.body delta: any): Promise<number> {
+  async update(@odata.key key: string, @odata.body delta: any): Promise<number> {
     const db = await connect();
     if (delta._id) delete delta._id;
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return await db.collection(collectionName).updateOne({ _id: keyId }, { $set: delta }).then(result => result.modifiedCount);
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return await db.collection(collectionName).updateOne({_id: keyId}, {$set: delta}).then(result => result.modifiedCount);
   }
 
   @odata.DELETE
-  async remove( @odata.key key: string): Promise<number> {
+  async remove(@odata.key key: string): Promise<number> {
     //console.log('DELETE');
     const db = await connect();
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return await db.collection(collectionName).deleteOne({ _id: keyId }).then(result => result.deletedCount);
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return await db.collection(collectionName).deleteOne({_id: keyId}).then(result => result.deletedCount);
   }
 
-  @odata.GET("Rows")
+  /*@odata.GET("Rows")
   async getRows(@odata.result result: SalesOrder, @odata.query query: ODataQuery, @odata.stream stream: Writable) {
     let mongodbQuery = createQuery(query);
     mongodbQuery.query = {$and: [mongodbQuery.query, {parentId: new ObjectID(result._id)}]};
@@ -104,5 +110,5 @@ export class SalesOrderController extends ODataController {
     let keyId;
     try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
     return await db.collection("SalesOrderRow").deleteOne({ _id: keyId }).then(result => result.deletedCount);
-  }
+  }*/
 }

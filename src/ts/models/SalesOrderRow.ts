@@ -1,6 +1,6 @@
-import { ObjectID } from "mongodb";
-import { Edm, odata } from "odata-v4-server";
-import { SalesOrder } from "./SalesOrder";
+import {ObjectID} from "mongodb";
+import {Edm, odata} from "odata-v4-server";
+import {SalesOrder} from "./SalesOrder";
 
 @Edm.Annotate({
   term: "UI.DisplayName",
@@ -14,26 +14,27 @@ export class SalesOrderRow{
   @Edm.Key
   @Edm.Computed
   @Edm.String
-  _id:ObjectID
+  _id: ObjectID
 
-  //@Edm.TypeDefinition(ObjectID)
-  //@Edm.Required
   @Edm.Computed
   @Edm.String
-  parentId:ObjectID
+  salesOrderId: ObjectID
 
   @Edm.String
-  name:string
-
-  @Edm.Boolean
-  deleted:boolean
+  productName: string
 
   @Edm.Double
-  quantity:number
+  quantity: number
 
   @Edm.Double
-  price:number
-  
+  unitPrice: number
+
   @Edm.Double
-  total:number
+  taxes: number
+
+  @Edm.Double
+  discountPercent: number
+
+  @Edm.Double
+  subtotal: number
 }

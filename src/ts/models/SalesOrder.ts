@@ -1,6 +1,5 @@
-import { ObjectID } from "mongodb";
-import { Edm, odata } from "odata-v4-server";
-import { SalesOrderRow } from "./SalesOrderRow";
+import {ObjectID} from "mongodb";
+import {Edm, odata} from "odata-v4-server";
 
 @Edm.Annotate({
   term: "UI.DisplayName",
@@ -14,63 +13,44 @@ export class SalesOrder{
   @Edm.Key
   @Edm.Computed
   @Edm.String
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "ID"
-  }, {
-    term: "UI.ControlHint",
-    string: "ReadOnly"
-  })
-  _id:ObjectID
+  _id: ObjectID
 
   @Edm.String
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Description"
-  }, {
-    term: "UI.ControlHint",
-    string: "ShortText"
-  })
-  name:string
-
-  @Edm.Boolean
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Editing"
-  }, {
-    term: "UI.ControlHint",
-    string: "Boolean"
-  })
-  edit:boolean
-
-  @Edm.Boolean
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Deleted"
-  }, {
-    term: "UI.ControlHint",
-    string: "Boolean"
-  })
-  deleted:boolean
+  name: string
 
   @Edm.Double
-  @Edm.Annotate({
-    term: "UI.DisplayName",
-    string: "Total"
-  }, {
-    term: "UI.ControlHint",
-    string: "Number"
-  })
-  total:number
+  number: number
 
-  @Edm.ForeignKey("parentId")
-  @Edm.Collection(Edm.EntityType(SalesOrderRow))
-  @Edm.Partner("SalesOrder")
-  Rows:SalesOrderRow[]
+  @Edm.Date
+  dateTime: Date
+
+  @Edm.String
+  customerName: string
+
+  @Edm.String
+  invoicingAddress: string
+
+  @Edm.String
+  deliveryAddress: string
+
+  @Edm.String
+  salesPersonName: string
+
+  @Edm.String
+  statusName: string
+
+  @Edm.Double
+  untaxedAmount: number
+
+  @Edm.Double
+  taxes: number
+
+  @Edm.Double
+  total: number
 
   @Edm.Collection(Edm.String)
   @Edm.Function
-  echo(){
-      return ["echotest"];
+  echo() {
+    return ["echotest"];
   }
 }
