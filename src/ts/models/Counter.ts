@@ -1,7 +1,7 @@
 import {ObjectID} from "mongodb";
 import {Edm, odata} from "odata-v4-server";
 
-export class Counter{
+export class Counter {
   constructor(jsonData: any) {
     Object.assign(this, jsonData);
   }

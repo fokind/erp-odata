@@ -5,7 +5,7 @@ import {Edm, odata} from "odata-v4-server";
   term: "UI.DisplayName",
   string: "SalesOrders"
 })
-export class SalesOrder{
+export class SalesOrder {
   constructor (jsonData: any) {
     Object.assign(this, jsonData);
   }

@@ -50,7 +50,7 @@ export class SalesOrderController extends ODataController {
     const db = await connect();
     data.dateTime = new Date();
     data.number = await db.collection('Counter').findOneAndUpdate(
-      {"key": "SalesOrder"},
+      {"key": collectionName},
       {$inc: {"value": 1}}
     ).then((result) => {
       return result.value.value;

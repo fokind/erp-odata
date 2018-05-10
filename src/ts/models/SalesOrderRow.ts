@@ -6,7 +6,7 @@ import {SalesOrder} from "./SalesOrder";
   term: "UI.DisplayName",
   string: "SalesOrderRows"
 })
-export class SalesOrderRow{
+export class SalesOrderRow {
   constructor (jsonData: any) {
     Object.assign(this, jsonData);
   }
