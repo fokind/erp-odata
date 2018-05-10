@@ -48,9 +48,10 @@ export class SalesOrderController extends ODataController {
   @odata.POST
   async insert(@odata.body data: any): Promise<SalesOrder> {
     const db = await connect();
+    data.dateTime = new Date();
     data.number = await db.collection('Counter').findOneAndUpdate(
-      {"key" : "SalesOrder"},
-      {$inc: {"value" : 1}}
+      {"key": "SalesOrder"},
+      {$inc: {"value": 1}}
     ).then((result) => {
       return result.value.value;
     });
