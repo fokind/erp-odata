@@ -49,6 +49,7 @@ export class SalesOrderController extends ODataController {
   async insert(@odata.body data: any): Promise<SalesOrder> {
     const db = await connect();
     data.dateTime = new Date();
+    if (typeof data.salesPersonId == "string") data.salesPersonId = new ObjectID(data.salesPersonId);
     data.number = await db.collection('Counter').findOneAndUpdate(
       {"key": collectionName},
       {$inc: {"value": 1}}
@@ -82,6 +83,7 @@ export class SalesOrderController extends ODataController {
     if (delta._id) delete delta._id;
     let keyId;
     try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    if (typeof delta.salesPersonId == "string") delta.salesPersonId = new ObjectID(delta.salesPersonId);
     return await db.collection(collectionName).updateOne({_id: keyId}, {$set: delta}).then(result => result.modifiedCount);
   }
 

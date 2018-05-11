@@ -37,6 +37,9 @@ export class SalesOrder {
   salesPersonName: string
 
   @Edm.String
+  salesPersonId: ObjectID
+
+  @Edm.String
   statusName: string
 
   @Edm.Double
