@@ -33,6 +33,8 @@ export class SalesOrderRowController extends ODataController {
     return result;
   }
 
+  //TODO добавить обработку OPTIONS
+
   @odata.GET
   async findOne(@odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrderRow> {
     const db = await connect();
@@ -77,6 +79,9 @@ export class SalesOrderRowController extends ODataController {
     if (delta._id) delete delta._id;
     let keyId;
     try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    //отправить в RMQ
+    //а где-то прослушать, вроде бы непосредственно в UI
+
     //await db.collection('SalerOrder')
 
     /*db.collection('SalerOrder').aggregate([
