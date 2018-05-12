@@ -1,5 +1,6 @@
 import {ObjectID} from "mongodb";
 import {Edm, odata} from "odata-v4-server";
+import {Employee} from "../models/Employee";
 
 @Edm.Annotate({
   term: "UI.DisplayName",
@@ -36,11 +37,25 @@ export class SalesOrder {
   @Edm.String
   salesPersonName: string
 
+//  @Edm.Computed
   @Edm.String
   salesPersonId: ObjectID
 
+//  @Edm.ForeignKey("salesPersonId")
+//  @Edm.EntityType(Edm.ForwardRef(() => Employee))
+//  @Edm.Partner("SalesOrders")
+//  salesPerson: Employee
+
+/*  @Edm.EntityType(Edm.ForwardRef(() => Client))
+  @Edm.Partner("Orders")
+  client:Client*/
+
+
   @Edm.String
   statusName: string
+
+  @Edm.String
+  statusKey: string
 
   @Edm.Double
   untaxedAmount: number
