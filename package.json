@@ -25,11 +25,13 @@
   },
   "homepage": "https://github.com/fokind/erp-odata#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
     "mongodb": "^3.0.7",
     "odata-v4-mongodb": "^0.1.12",
     "odata-v4-server": "^0.2.11",
     "passport": "^0.4.0",
+    "passport-cookie": "^1.0.6",
     "passport-http": "^0.3.0"
   },
   "devDependencies": {
