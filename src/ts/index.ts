@@ -31,19 +31,19 @@ class AuthenticationError extends HttpRequestError{
 
 //к лупбэку обращаться через express get/post
 
-passport.use(new CookieStrategy({key: 'auth'},
+/*passport.use(new CookieStrategy({key: 'auth'},
   function(token, done) {
     console.log(token);
-    /*User.findByToken({ token: token }, function(err, user) {
+    User.findByToken({ token: token }, function(err, user) {
       if (err) { return done(err); }
-      if (!user) { return done(null, false); }*/
+      if (!user) { return done(null, false); }
       return done(null, true);
     //});
   }
-));
+));*/
 
 app.use(
-  passport.authenticate("cookie", {session: false}),
+  //passport.authenticate("cookie", {session: false}),
   //passport.authenticate("basic", {session: false, failWithError: true}),
   ErpServer.create(),
   ODataErrorHandler
