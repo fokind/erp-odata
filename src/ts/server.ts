@@ -1,5 +1,6 @@
 import { ODataServer, ODataController, Edm, odata, ODataQuery } from "odata-v4-server";
 import { EmployeeController } from "./controllers/Employee";
+import { SalesOrderStatusController } from "./controllers/SalesOrderStatus";
 import { SalesOrderController } from "./controllers/SalesOrder";
 import { SalesOrderRowController } from "./controllers/SalesOrderRow";
 import { CounterController } from "./controllers/Counter";
@@ -7,6 +8,7 @@ import { CounterController } from "./controllers/Counter";
 @odata.cors
 @odata.namespace("Erp.OData")
 @odata.controller(EmployeeController, true)
+@odata.controller(SalesOrderStatusController, true)
 @odata.controller(SalesOrderController, true)
 @odata.controller(SalesOrderRowController, true)
 @odata.controller(CounterController, true)

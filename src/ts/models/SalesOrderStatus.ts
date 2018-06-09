@@ -25,9 +25,9 @@ export class SalesOrderStatus {
   @Edm.Double
   sortPosition: number
 
-  @Edm.Collection(Edm.String)
+  /*@Edm.Collection(Edm.String)
   @Edm.Function
   echo() {
     return ["echotest"];
-  }
+  }*/
 }

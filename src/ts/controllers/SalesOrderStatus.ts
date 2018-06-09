@@ -33,7 +33,6 @@ export class SalesOrderStatusController extends ODataController {
 
   @odata.GET
   async findOne(@odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrderStatus> {
-    
     const db = await connect();
     const mongodbQuery = createQuery(query);
     let keyId;
@@ -46,14 +45,14 @@ export class SalesOrderStatusController extends ODataController {
   @odata.POST
   async insert(@odata.body data: any): Promise<SalesOrderStatus> {
     const db = await connect();
-    data.dateTime = new Date();
-    if (typeof data.salesPersonId == "string") data.salesPersonId = new ObjectID(data.salesPersonId);
-    data.number = await db.collection('Counter').findOneAndUpdate(
+    //data.dateTime = new Date();
+    //if (typeof data.salesPersonId == "string") data.salesPersonId = new ObjectID(data.salesPersonId);
+    /*data.number = await db.collection('Counter').findOneAndUpdate(
       {"key": collectionName},
       {$inc: {"value": 1}}
     ).then((result) => {
       return result.value.value;
-    });
+    });*/
 
     return await db.collection(collectionName).insertOne(data).then((result) => {
       data._id = result.insertedId;
@@ -81,7 +80,7 @@ export class SalesOrderStatusController extends ODataController {
     if (delta._id) delete delta._id;
     let keyId;
     try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
-    if (typeof delta.salesPersonId == "string") delta.salesPersonId = new ObjectID(delta.salesPersonId);
+    //if (typeof delta.salesPersonId == "string") delta.salesPersonId = new ObjectID(delta.salesPersonId);
     return await db.collection(collectionName).updateOne({_id: keyId}, {$set: delta}).then(result => result.modifiedCount);
   }
 
