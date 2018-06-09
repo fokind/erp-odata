@@ -5,6 +5,7 @@ import { Writable } from "stream";
 import { SalesOrder } from "../models/SalesOrder";
 import { SalesOrderRow } from "../models/SalesOrderRow";
 import connect from "../connect";
+import { Employee } from "../models/Employee";
 
 const collectionName = "SalesOrder";
 
@@ -12,8 +13,7 @@ const collectionName = "SalesOrder";
 @Edm.EntitySet("SalesOrders")
 export class SalesOrderController extends ODataController {
   @odata.GET
-  async find( @odata.query query: ODataQuery): Promise<SalesOrder[]> {
-    
+  async find(@odata.query query: ODataQuery): Promise<SalesOrder[]> {
     const db = await connect();
     const mongodbQuery = createQuery(query);
     if (typeof mongodbQuery.query._id == "string") mongodbQuery.query._id = new ObjectID(mongodbQuery.query._id);
@@ -35,7 +35,6 @@ export class SalesOrderController extends ODataController {
 
   @odata.GET
   async findOne(@odata.key key: string, @odata.query query: ODataQuery): Promise<SalesOrder> {
-    
     const db = await connect();
     const mongodbQuery = createQuery(query);
     let keyId;
@@ -89,29 +88,21 @@ export class SalesOrderController extends ODataController {
 
   @odata.DELETE
   async remove(@odata.key key: string): Promise<number> {
-    //console.log('DELETE');
     const db = await connect();
     let keyId;
     try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
     return await db.collection(collectionName).deleteOne({_id: keyId}).then(result => result.deletedCount);
   }
 
-  /*@odata.GET("Rows")
-  async getRows(@odata.result result: SalesOrder, @odata.query query: ODataQuery, @odata.stream stream: Writable) {
-    let mongodbQuery = createQuery(query);
-    mongodbQuery.query = {$and: [mongodbQuery.query, {parentId: new ObjectID(result._id)}]};
+  @odata.GET("salesPerson")
+  async getSalesPerson(@odata.result result: SalesOrder, @odata.query query: ODataQuery): Promise<Employee> {
     const db = await connect();
-    return await db.collection("SalesOrderRow")
-      .find(mongodbQuery.query, mongodbQuery.projection, mongodbQuery.skip, mongodbQuery.limit)
-      .stream().pipe(stream);
-  }
-
-  @odata.DELETE("Rows")
-  async removeRows( @odata.key key: string): Promise<number> {
-    //console.log('DELETE Rows');
-    const db = await connect();
+    const mongodbQuery = createQuery(query);
+    let key = result.salesPersonId;
     let keyId;
-    try{ keyId = new ObjectID(key); }catch(err){ keyId = key; }
-    return await db.collection("SalesOrderRow").deleteOne({ _id: keyId }).then(result => result.deletedCount);
-  }*/
+    try { keyId = new ObjectID(key); } catch(err) { keyId = key; }
+    return db.collection("Employee").findOne({_id: keyId}, {
+      fields: mongodbQuery.projection
+    });
+  }
 }

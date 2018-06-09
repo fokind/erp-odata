@@ -37,19 +37,12 @@ export class SalesOrder {
   @Edm.String
   salesPersonName: string
 
-//  @Edm.Computed
   @Edm.String
   salesPersonId: ObjectID
 
-//  @Edm.ForeignKey("salesPersonId")
-//  @Edm.EntityType(Edm.ForwardRef(() => Employee))
-//  @Edm.Partner("SalesOrders")
-//  salesPerson: Employee
-
-/*  @Edm.EntityType(Edm.ForwardRef(() => Client))
-  @Edm.Partner("Orders")
-  client:Client*/
-
+  @Edm.ForeignKey("salesPersonId")
+  @Edm.EntityType(Edm.ForwardRef(() => Employee))
+  salesPerson: Employee
 
   @Edm.String
   statusName: string
